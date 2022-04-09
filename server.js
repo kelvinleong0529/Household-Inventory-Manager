@@ -4,11 +4,13 @@ import usersRoutes from "./routes/user.js";
 import express from "express";
 import bodyParser from "body-parser"; // allows us to take in incoming post request bodies
 
-const app = express(); // initialize the express application
-const PORT = 5000; // capital letters means it's a constant
+// initialize the express application
+const app = express();
+const PORT = 5000;
 
 // tell the app that we will be using JSON data in the app
-app.use(bodyParser.json()); // intialize the bodyParser middleware
+// intialize the bodyParser middleware
+app.use(bodyParser.json());
 
 app.use("/users", usersRoutes);
 
