@@ -16,12 +16,12 @@ const router = express.Router();
 router.get("/", getUsers);
 
 // when we put the semicolon sign, we are expecting anything after the user's path
-router.get("/:id", getUser);
+router.get("/:userId", getUser);
 
-router.delete("/:id", deleteUser);
+router.delete("/:userId", deleteUser);
 
 router.post("/", createUser);
 
-router.patch("/:id", updateUser);
+router.patch("/:userId", updateUser);
 
 export default router;
