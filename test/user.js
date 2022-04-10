@@ -11,12 +11,34 @@ describe("GET /", () => {
   it("it should GET all the users", (done) => {
     chai
       .request(server)
-      .get("/") // pass the resource URL here
+      .get("/api/users")
       .end((error, response) => {
-        // put the expectation  and assertion here
         response.should.have.status(200);
-        // response.body.should.be.a("array");
-        response.body.length.should.be.eq(3);
+        response.headers["content-type"].should.contains("application/json");
+        done();
+      });
+  });
+
+  it("it should not GET all the users", (done) => {
+    chai
+      .request(server)
+      .get("/api/user") // invalid resource URL
+      .end((error, response) => {
+        response.should.have.status(404);
+        done();
+      });
+  });
+});
+
+describe("GET /:id", () => {
+  it("it should GET a user by Id", (done) => {
+    const userId = 1;
+    chai
+      .request(server)
+      .get("/api/users/" + userId)
+      .end((error, response) => {
+        response.should.have.status(200);
+        response.headers["content-type"].should.contains("application/json");
         done();
       });
   });

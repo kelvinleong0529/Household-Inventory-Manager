@@ -6,7 +6,7 @@ export const getUsers = async (request, response) => {
     const sqlStatement = `SELECT * FROM user_table_development`;
     const sqlResult = await pool.query(sqlStatement);
 
-    response.json(sqlResult.rows);
+    response.send(sqlResult.rows);
   } catch (error) {
     console.error(error);
   }
@@ -45,6 +45,14 @@ export const deleteUser = async (request, response) => {
 export const createUser = async (request, response) => {
   try {
     const { firstName, lastName, age } = request.body;
+
+    if (
+      (firstName === undefined) |
+      (lastName === undefined) |
+      (age === undefined)
+    ) {
+      response.send("Expect FIRSTNAME, LASTNAME & AGE from the request body!!");
+    }
 
     const sqlStatement = `INSERT INTO user_table_development (firstName, lastName, age) VALUES ($1,$2,$3) RETURNING *`;
     const sqlParams = [firstName, lastName, age];
