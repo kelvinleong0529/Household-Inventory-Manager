@@ -4,7 +4,7 @@ import router from "./controllers/routes/user.js";
 import express from "express";
 import bodyParser from "body-parser"; // allows us to take in incoming post request bodies
 
-// initialize the express serverlication
+// initialize the express server
 const server = express();
 const PORT = 5000;
 
