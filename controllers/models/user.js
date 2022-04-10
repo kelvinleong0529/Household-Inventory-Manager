@@ -23,7 +23,7 @@ export const getUser = async (request, response) => {
 
     // if SQL return 0 rows meaning the userId is invalid
     if (!sqlResult.rowCount) {
-      response.status(404).send("Invalid userId!!");
+      return response.status(404).send("Invalid userId!!");
     }
     response.send(sqlResult.rows[0]);
   } catch (error) {
@@ -36,13 +36,12 @@ export const createUser = async (request, response) => {
     const validateError = ValidateUserApiSchema(request.body).error;
 
     if (validateError) {
-      return response
-        .status(400)
+      return response.status(400)
         .send(`Please ensure the following requiurements are met:
-      1. FirstName, LastName & Age must be PRESENT
-      2. FirstName's length must be smaller than 255
-      3. LastName's length must be smaller than 255
-      4. Age must be an INTEGER and greater than 0`);
+        1. FirstName, LastName & Age must be PRESENT
+        2. FirstName's length must be smaller than 255
+        3. LastName's length must be smaller than 255
+        4. Age must be an INTEGER and greater than 0`);
     }
 
     const { firstName, lastName, age } = request.body;
@@ -73,7 +72,7 @@ export const updateUser = async (request, response) => {
     );
 
     if (!assrtionSqlResult.rowCount) {
-      response.status(404).send("Invalid userId!!");
+      return response.status(400).send("Invalid userId!!");
     }
 
     const sqlStatement = `UPDATE user_table_development SET firstname = $1, lastname = $2, age = $3 WHERE userId = $4`;
@@ -99,7 +98,7 @@ export const deleteUser = async (request, response) => {
     );
 
     if (!assrtionSqlResult.rowCount) {
-      response.status(404).send("Invalid userId!!");
+      return response.status(400).send("Invalid userId!!");
     }
 
     // SQL Delete Action
