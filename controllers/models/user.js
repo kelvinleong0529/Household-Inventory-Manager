@@ -1,6 +1,27 @@
 // for PostgreSQL connectivity
 import { pool } from "../../database/connectSever.js";
 import ValidateUserApiSchema from "../../validation/user-Api-Schema.js";
+import { createClient } from "redis";
+import { RedisSearchLanguages } from "@node-redis/search/dist/commands";
+import res from "express/lib/response";
+
+const redisClient = createClient();
+
+const DEAFULT_EXPIRATION = 3600;
+
+function getOrSetCahce(key, callback) {
+  return new Promise((resolve, reject) => {
+    redisClient.get(key, async (error, data) => {
+      if (error) return reject(error);
+      if (data != null) return resolve(JSON.parse(data));
+      // if neither of the above condition is met
+      // meaning me miss the cache
+      const freshData = await callback();
+      redisClient.setEx(key, DEAFULT_EXPIRATION, JSON.stringify(freshData));
+      resolve(freshData);
+    });
+  });
+}
 
 export const getUsers = async (request, response) => {
   try {
@@ -16,6 +37,19 @@ export const getUsers = async (request, response) => {
 export const getUser = async (request, response) => {
   try {
     const { userId } = request.params;
+
+    // -----------------------------------------------------
+    // Unblock this code if using REDIS
+    // -----------------------------------------------------
+    // const data = getOrSetCahce(`user?userId:${userId}`,async ()=>{
+    //   const sqlStatement = `SELECT * FROM user_table_development WHERE userId = ($1)`;
+    //   const sqlParams = [userId];
+    //   const sqlResult = await pool.query(sqlStatement, sqlParams);
+
+    //   return sqlResult.rows[0]
+    // })
+    // response.json(data)
+
 
     const sqlStatement = `SELECT * FROM user_table_development WHERE userId = ($1)`;
     const sqlParams = [userId];
