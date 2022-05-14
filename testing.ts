@@ -1,1 +1,0 @@
-var age:number = 1
