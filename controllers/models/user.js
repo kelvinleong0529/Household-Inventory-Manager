@@ -50,7 +50,6 @@ export const getUser = async (request, response) => {
     // })
     // response.json(data)
 
-
     const sqlStatement = `SELECT * FROM user_table_development WHERE userId = ($1)`;
     const sqlParams = [userId];
     const sqlResult = await pool.query(sqlStatement, sqlParams);
