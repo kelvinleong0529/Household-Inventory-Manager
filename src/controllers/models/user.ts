@@ -1,13 +1,14 @@
 // for PostgreSQL connectivity
 import { pool } from "../../database/connectServer";
 import ValidateUserApiSchema from "../../validation/user-Api-Schema.js";
-import { createClient, RedisClientType } from "redis";
+import redis, { RedisClientType } from "redis";
 import { RedisSearchLanguages } from "@node-redis/search/dist/commands";
 import res from "express/lib/res";
 
 import { Request, Response } from "express";
 
-const redisClient = createClient();
+const redisClient = redis.createClient()
+
 
 const DEAFULT_EXPIRATION: number = 3600;
 
