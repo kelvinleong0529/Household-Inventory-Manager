@@ -1,7 +1,7 @@
 import { rateLimit } from "express-rate-limit";
 import { Request, Response } from "express";
 
-import { NewUser } from "../../interfaces/new_user";
+import { NewUser } from "../../interfaces/newUser";
 import { db } from "../../db";
 import { generateApiKey, hash } from "../../authorization/hashing";
 

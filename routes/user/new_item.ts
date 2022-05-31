@@ -1,7 +1,7 @@
 import { rateLimit } from "express-rate-limit";
 import { Request, Response } from "express";
 
-import { NewItem } from "../../interfaces/new_item";
+import { NewItem } from "../../interfaces/newItem";
 import { db } from "../../db";
 
 const FIVE_MINUTES: number = 5 * 60 * 1000
