@@ -1,4 +1,4 @@
-export interface GetUser {
+export interface GetItem {
     id: string
     name: string
     country: string

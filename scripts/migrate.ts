@@ -21,13 +21,15 @@ export const createUserCredentialsTable = async () => {
 // table to store user inventory / items
 export const createUserTable = async () => {
     try {
-        await db.schema.dropTableIfExists("user");
-        await db.schema.withSchema("public").createTable("user", (table) => {
+        await db.schema.dropTableIfExists("users");
+        await db.schema.withSchema("public").createTable("users", (table) => {
             table.increments('id');
             table.integer("user_id").references("id").inTable("users_credentials");
-            table.string("name", 255).notNullable();
-            table.string("country", 255);
-            table.integer("age");
+            table.string("category", 255);
+            table.string("name", 255);
+            table.integer("current_quantity");
+            table.integer("alert_quantity");
+            table.date("expiry_date");
             table.timestamps(true, true);
         });
         console.log("Created users table!");

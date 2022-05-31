@@ -1,13 +1,15 @@
 import express from "express"
 
 import { validatePost, createPostLimit, createPost } from "./routes/user/new_item";
-import { validateUser, createUserLimit, createUser } from "./routes/user/new_user";
+import { validateUser, createUserLimit, createUser } from "./routes/user/newUser";
 
 import { db } from "./db"
 import { createUserCredentialsTable, createUserTable } from "./scripts/migrate";
 
 // interfaces
-import { GetUser } from "./interfaces/getUser";
+import { GetItem } from "./interfaces/getItem";
+import { getItem, getItemLimit } from "./routes/user/getItem";
+import { validateApiKey } from "./authorization/validate_api_key";
 
 const PORT: number = Number(process.env.PORT || 5000);
 const app = express()
@@ -25,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users", async (req, res) => {
-    const queryUser: GetUser = {
+    const queryUser: GetItem = {
         id: req.body.id,
         name: req.body.name,
         country: req.body.country,
@@ -34,6 +36,8 @@ app.get("/users", async (req, res) => {
     const users = await db.select().where({ id: queryUser["id"] }).from("users");
     res.json(users);
 });
+
+app.get("/example", getItemLimit, validateApiKey, getItem);
 
 app.post("/users", createPostLimit, validatePost, createPost);
 

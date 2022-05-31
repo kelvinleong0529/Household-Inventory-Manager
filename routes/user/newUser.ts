@@ -33,18 +33,18 @@ export const validateUser = (req: Request, res: Response, next: Function) => {
 export const createUser = async (req: Request, res: Response) => {
     try {
 
-
         const apiKey: string = generateApiKey()
         const hashedApikey: string = hash(apiKey)
+        const hashedPassword: string = hash(req.body.password)
 
         const newUser: NewUser = {
             email: req.body.email,
-            password: req.body.password,
+            password: hashedPassword,
             apiKey: hashedApikey
         }
 
         const user = await db("users_credentials").insert(newUser).returning("*");
-        res.json({ api_key: hashedApikey });
+        res.json({ api_key: apiKey });
     }
     catch (error) {
         console.log(error)

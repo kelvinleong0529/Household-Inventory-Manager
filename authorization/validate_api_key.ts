@@ -1,21 +1,14 @@
 import { MAIN_API_KEY } from "./api_key";
 import { Request, Response } from "express";
+import { hash } from "./hashing";
 
-export const validateApiKey = (req: Request, res: Response, next: Function) => {
+import { db } from "../db";
 
-    const { body: data } = req;
+export const validateApiKey = async (req: Request, res: Response, next: Function) => {
 
-    const email: string = data.headers["email"]
-    const password: string = data.headers["password"]
-    const apiKey: string = data.headers["api-key"]
-
-    // as long as the request provide the main key, grant them the access
-    if (apiKey == MAIN_API_KEY) return next()
-
-    if (!apiKey) {
-        res.status(400)
-        return res.send({ error: "API key is required" })
-    }
+    const email: any = req.headers["email"]
+    const password: any = req.headers["password"]
+    const apiKey: any  = req.headers["api-key"]
 
     if (!email) {
         res.status(400)
@@ -27,5 +20,21 @@ export const validateApiKey = (req: Request, res: Response, next: Function) => {
         return res.send({ error: "Password is required" })
     }
 
-    return next()
+    // as long as the request provide the main key, grant them the access
+    if (apiKey == MAIN_API_KEY) return next()
+
+    if (!apiKey) {
+        res.status(400)
+        return res.send({ error: "API key is required" })
+    }
+
+    const user = await db.select().where({ email: email }).from("users_credentials");
+    const hashedApiKey: string = user[0]["apiKey"]
+    const hashedPassword: string = user[0]["password"]
+
+    if (hash(apiKey) === hashedApiKey && hash(password) === hashedPassword) {
+        return next()
+    } else {
+        return res.send({ error: "Incorrect Credentials" })
+    }
 }
