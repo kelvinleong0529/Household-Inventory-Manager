@@ -8,7 +8,7 @@ export const validateApiKey = async (req: Request, res: Response, next: Function
 
     const email: any = req.headers["email"]
     const password: any = req.headers["password"]
-    const apiKey: any  = req.headers["api-key"]
+    const apiKey: any = req.headers["api-key"]
 
     if (!email) {
         res.status(400)
@@ -28,9 +28,12 @@ export const validateApiKey = async (req: Request, res: Response, next: Function
         return res.send({ error: "API key is required" })
     }
 
-    const user = await db.select().where({ email: email }).from("users_credentials");
+    const user = await db.select().where({ email: email }).from("user_credentials");
     const hashedApiKey: string = user[0]["apiKey"]
     const hashedPassword: string = user[0]["password"]
+
+    // pass the id to the next function through middleware
+    res.locals.user_id = user[0]["id"]
 
     if (hash(apiKey) === hashedApiKey && hash(password) === hashedPassword) {
         return next()

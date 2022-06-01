@@ -43,7 +43,7 @@ export const createUser = async (req: Request, res: Response) => {
             apiKey: hashedApikey
         }
 
-        const user = await db("users_credentials").insert(newUser).returning("*");
+        const user = await db("user_credentials").insert(newUser).returning("*");
         res.json({ api_key: apiKey });
     }
     catch (error) {
