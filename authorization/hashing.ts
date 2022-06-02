@@ -1,6 +1,6 @@
 import crypto, { randomUUID } from "crypto";
 
-import { SECRET_API_KEY } from "./api_key";
+import { SECRET_API_KEY } from "./apiKey";
 
 export const generateApiKey: Function = randomUUID
 
@@ -11,5 +11,9 @@ export const hash = (value: string) => {
 };
 
 export const isHashedValueKey = (apiKey: string, hashedApiKey: string) => {
-    return hashedApiKey == hash(apiKey) ? true : false
+    return hashedApiKey === hash(apiKey) ? true : false
+}
+
+export const isHashedPassword = (password: string, hashedPassword: string) => {
+    return hashedPassword === hash(password) ? true : false
 }

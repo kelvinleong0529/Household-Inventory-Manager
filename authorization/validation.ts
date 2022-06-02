@@ -1,6 +1,7 @@
-import { MAIN_API_KEY } from "./api_key";
+import { MAIN_API_KEY } from "./apiKey";
 import { Request, Response } from "express";
-import { hash } from "./hashing";
+import { isHashedValueKey, isHashedPassword } from "./hashing";
+import { getUser } from "../routes/user/getUser";
 
 import { db } from "../db";
 
@@ -28,14 +29,17 @@ export const validateApiKey = async (req: Request, res: Response, next: Function
         return res.send({ error: "API key is required" })
     }
 
-    const user = await db.select().where({ email: email }).from("user_credentials");
+    const user = getUser(email)
+
+    if (user.length === 0) return res.send({ error: `User doesn't exist! Please sign up at http://localhost:5000` })
+
     const hashedApiKey: string = user[0]["apiKey"]
     const hashedPassword: string = user[0]["password"]
 
     // pass the id to the next function through middleware
     res.locals.user_id = user[0]["id"]
 
-    if (hash(apiKey) === hashedApiKey && hash(password) === hashedPassword) {
+    if (isHashedValueKey(apiKey, hashedApiKey) && isHashedPassword(password, hashedPassword)) {
         return next()
     } else {
         return res.send({ error: "Incorrect Credentials" })

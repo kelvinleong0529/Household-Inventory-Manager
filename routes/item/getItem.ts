@@ -13,6 +13,9 @@ export const getItemLimit = rateLimit({
 
 export const getItem = async (req: Request, res: Response) => {
     const user_id: number = res.locals.user_id
-    const item = await db.select().where({ user_id: user_id }).from("item");
+
+    const columnsReturn = ["item_name", "item_category", "current_quantity", "alert_quantity", "expiry_date"]
+
+    const item = await db.select(columnsReturn).where({ user_id: user_id }).from("item");
     res.json(item);
 }
